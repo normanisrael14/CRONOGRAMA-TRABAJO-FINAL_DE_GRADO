@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cronograma TFG - Diagrama de Gantt</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/frappe-gantt/0.6.1/frappe-gantt.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/frappe-gantt/0.6.1/frappe-gantt.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #161922;
+    --accent: #5b8cff;
+    --accent2: #ff8a5b;
+    --text: #e7e9ee;
+    --muted: #9aa3b2;
+    --phase: #3a4257;
+    --milestone: #ff8a5b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    padding: 20px 28px 14px;
+    border-bottom: 1px solid #232735;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+  h1 { margin: 0 0 4px; font-size: 1.3rem; font-weight: 600; }
+  .sub { color: var(--muted); font-size: 0.85rem; }
+  .controls {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .controls button {
+    background: var(--panel);
+    border: 1px solid #2a2f3d;
+    color: var(--text);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+  .controls button:hover, .controls button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: var(--muted);
+    align-items: center;
+  }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  #gantt-wrap {
+    overflow: auto;
+    padding: 16px 0 60px;
+  }
+  #gantt { min-width: 100%; }
+
+  /* Frappe Gantt overrides */
+  .gantt .grid-background { fill: var(--bg); }
+  .gantt .grid-header { fill: var(--panel); stroke: #232735; }
+  .gantt .grid-row { fill: var(--bg); }
+  .gantt .grid-row:nth-child(even) { fill: #131620; }
+  .gantt .row-line { stroke: #1d2130; }
+  .gantt .tick { stroke: #232735; }
+  .gantt .tick.thick { stroke: #323849; }
+  .gantt .today-highlight { fill: rgba(91,140,255,0.15); }
+  .gantt-container .lower-text, .gantt-container .upper-text { fill: var(--muted); font-size: 10px; }
+  .gantt .bar { fill: var(--accent); stroke: none; rx: 4; ry: 4; }
+  .gantt .bar-progress { fill: #3f6fe0; }
+  .gantt .bar-label { fill: #fff; font-size: 11px; }
+  .gantt .bar-label.big { fill: var(--text); }
+  .gantt .bar-wrapper.phase .bar { fill: var(--phase); }
+  .gantt .bar-wrapper.phase .bar-progress { fill: var(--phase); }
+  .gantt .bar-wrapper.milestone .bar { fill: var(--milestone); }
+  .gantt .arrow { stroke: #4a5268; }
+  .gantt-container { background: var(--bg); }
+  .popup-wrapper { background: var(--panel); border: 1px solid #2a2f3d; color: var(--text); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .popup-wrapper .title { color: var(--text); font-weight: 600; }
+  .popup-wrapper .subtitle { color: var(--muted); }
+  .popup-wrapper .pointer { display:none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Cronograma del Trabajo Final de Graduación</h1>
+  <div class="sub">Julio – Diciembre 2026 · 99 actividades en 12 fases</div>
+  <div class="controls">
+    <button data-mode="Day">Día</button>
+    <button data-mode="Week" class="active">Semana</button>
+    <button data-mode="Month">Mes</button>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--phase)"></span>Fase</span>
+      <span><span class="dot" style="background:var(--accent)"></span>Tarea</span>
+      <span><span class="dot" style="background:var(--milestone)"></span>Hito</span>
+    </div>
+  </div>
+</header>
+<div id="gantt-wrap">
+  <svg id="gantt"></svg>
+</div>
+
+<script>
+const tasks = [{"id": "t1", "name": "1 Inicio y planificación del TFG", "start": "2026-07-06", "end": "2026-07-17", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t2", "name": "1.1 Revisión de observaciones del docente sobre entregas previas", "start": "2026-07-06", "end": "2026-07-08", "progress": 0, "dependencies": "", "custom_class": "task"}, {"id": "t3", "name": "1.2 Ajuste del título provisorio y alcance del TFG", "start": "2026-07-09", "end": "2026-07-10", "progress": 0, "dependencies": "t2", "custom_class": "task"}, {"id": "t4", "name": "1.3 Definición del tipo de trabajo: proyecto aplicado/intervención metodológica", "start": "2026-07-13", "end": "2026-07-14", "progress": 0, "dependencies": "t3", "custom_class": "task"}, {"id": "t5", "name": "1.4 Delimitación institucional del objeto de estudio", "start": "2026-07-15", "end": "2026-07-16", "progress": 0, "dependencies": "t4", "custom_class": "task"}, {"id": "t6", "name": "1.5 Hito: alcance inicial aprobado para continuar", "start": "2026-07-17", "end": "2026-07-17", "progress": 0, "dependencies": "t5", "custom_class": "milestone"}, {"id": "t7", "name": "2 Marco teórico y antecedentes", "start": "2026-07-13", "end": "2026-08-28", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t8", "name": "2.1 Revisión bibliográfica sobre evidencia digital y forensia móvil", "start": "2026-07-13", "end": "2026-07-17", "progress": 0, "dependencies": "t3", "custom_class": "task"}, {"id": "t9", "name": "2.2 Revisión bibliográfica sobre preservación, integridad y trazabilidad", "start": "2026-07-20", "end": "2026-07-24", "progress": 0, "dependencies": "t8", "custom_class": "task"}, {"id": "t10", "name": "2.3 Revisión bibliográfica sobre triage digital y priorización forense", "start": "2026-07-27", "end": "2026-07-31", "progress": 0, "dependencies": "t9", "custom_class": "task"}, {"id": "t11", "name": "2.4 Revisión bibliográfica sobre demanda forense, backlog y gestión institucional", "start": "2026-08-03", "end": "2026-08-06", "progress": 0, "dependencies": "t10", "custom_class": "task"}, {"id": "t12", "name": "2.5 Revisión bibliográfica sobre inteligencia de negocios y minería de datos", "start": "2026-08-07", "end": "2026-08-13", "progress": 0, "dependencies": "t11", "custom_class": "task"}, {"id": "t13", "name": "2.6 Revisión bibliográfica sobre IA, machine learning y modelos predictivos", "start": "2026-08-14", "end": "2026-08-20", "progress": 0, "dependencies": "t12", "custom_class": "task"}, {"id": "t14", "name": "2.7 Revisión bibliográfica sobre análisis multicriterio y AHP", "start": "2026-08-21", "end": "2026-08-26", "progress": 0, "dependencies": "t13", "custom_class": "task"}, {"id": "t15", "name": "2.8 Redacción preliminar del marco teórico integrado", "start": "2026-08-20", "end": "2026-08-28", "progress": 0, "dependencies": "t9,t10,t11,t12,t13,t14", "custom_class": "task"}, {"id": "t16", "name": "3 Diseño metodológico e instrumentos", "start": "2026-07-20", "end": "2026-09-04", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t17", "name": "3.1 Revisión del diseño metodológico elaborado en actividades previas", "start": "2026-07-20", "end": "2026-07-22", "progress": 0, "dependencies": "t6", "custom_class": "task"}, {"id": "t18", "name": "3.2 Definición final de enfoque metodológico mixto, aplicado y no experimental", "start": "2026-07-23", "end": "2026-07-27", "progress": 0, "dependencies": "t17", "custom_class": "task"}, {"id": "t19", "name": "3.3 Definición de población, muestra y unidad estadística", "start": "2026-07-28", "end": "2026-07-31", "progress": 0, "dependencies": "t18", "custom_class": "task"}, {"id": "t20", "name": "3.4 Definición de criterios muestrales para entrevistas", "start": "2026-08-03", "end": "2026-08-05", "progress": 0, "dependencies": "t19", "custom_class": "task"}, {"id": "t21", "name": "3.5 Diseño de guía de entrevista semiestructurada", "start": "2026-08-06", "end": "2026-08-12", "progress": 0, "dependencies": "t20", "custom_class": "task"}, {"id": "t22", "name": "3.6 Diseño de matriz de operacionalización de variables", "start": "2026-08-13", "end": "2026-08-19", "progress": 0, "dependencies": "t18", "custom_class": "task"}, {"id": "t23", "name": "3.7 Diseño de ficha de relevamiento de registros", "start": "2026-08-20", "end": "2026-08-25", "progress": 0, "dependencies": "t22", "custom_class": "task"}, {"id": "t24", "name": "3.8 Diseño preliminar del diccionario de datos", "start": "2026-08-26", "end": "2026-09-01", "progress": 0, "dependencies": "t23", "custom_class": "task"}, {"id": "t25", "name": "3.9 Validación interna de instrumentos metodológicos", "start": "2026-09-02", "end": "2026-09-04", "progress": 0, "dependencies": "t21,t22,t23,t24", "custom_class": "task"}, {"id": "t26", "name": "4 Relevamiento y construcción de base de datos", "start": "2026-08-24", "end": "2026-10-16", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t27", "name": "4.1 Identificación de fuentes internas disponibles", "start": "2026-08-24", "end": "2026-08-28", "progress": 0, "dependencies": "t23", "custom_class": "task"}, {"id": "t28", "name": "4.2 Identificación de fuentes públicas externas disponibles", "start": "2026-08-31", "end": "2026-09-03", "progress": 0, "dependencies": "t27", "custom_class": "task"}, {"id": "t29", "name": "4.3 Relevamiento de campos existentes en registros internos", "start": "2026-09-04", "end": "2026-09-10", "progress": 0, "dependencies": "t27", "custom_class": "task"}, {"id": "t30", "name": "4.4 Relevamiento de campos disponibles en bases públicas", "start": "2026-09-11", "end": "2026-09-16", "progress": 0, "dependencies": "t28", "custom_class": "task"}, {"id": "t31", "name": "4.5 Definición de estructura relacional de la base", "start": "2026-09-17", "end": "2026-09-22", "progress": 0, "dependencies": "t29,t30", "custom_class": "task"}, {"id": "t32", "name": "4.6 Construcción de tabla de causas o actuaciones", "start": "2026-09-23", "end": "2026-09-25", "progress": 0, "dependencies": "t31", "custom_class": "task"}, {"id": "t33", "name": "4.7 Construcción de tabla de dispositivos", "start": "2026-09-28", "end": "2026-09-30", "progress": 0, "dependencies": "t32", "custom_class": "task"}, {"id": "t34", "name": "4.8 Construcción de tabla de extracciones", "start": "2026-10-01", "end": "2026-10-05", "progress": 0, "dependencies": "t33", "custom_class": "task"}, {"id": "t35", "name": "4.9 Construcción de tabla de archivos, metadatos y artefactos digitales", "start": "2026-10-06", "end": "2026-10-12", "progress": 0, "dependencies": "t34", "custom_class": "task"}, {"id": "t36", "name": "4.10 Construcción de tabla de tiempos, estados y trazabilidad", "start": "2026-10-13", "end": "2026-10-15", "progress": 0, "dependencies": "t34", "custom_class": "task"}, {"id": "t37", "name": "4.11 Hito: primera estructura de base de datos conformada", "start": "2026-10-16", "end": "2026-10-16", "progress": 0, "dependencies": "t35,t36", "custom_class": "milestone"}, {"id": "t38", "name": "5 Depuración, anonimización e indicadores", "start": "2026-09-28", "end": "2026-10-30", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t39", "name": "5.1 Revisión de calidad de datos disponibles", "start": "2026-09-28", "end": "2026-10-02", "progress": 0, "dependencies": "t31", "custom_class": "task"}, {"id": "t40", "name": "5.2 Normalización de categorías técnicas", "start": "2026-10-05", "end": "2026-10-08", "progress": 0, "dependencies": "t39", "custom_class": "task"}, {"id": "t41", "name": "5.3 Normalización de categorías jurídicas e investigativas", "start": "2026-10-09", "end": "2026-10-14", "progress": 0, "dependencies": "t40", "custom_class": "task"}, {"id": "t42", "name": "5.4 Anonimización de identificadores sensibles", "start": "2026-10-15", "end": "2026-10-21", "progress": 0, "dependencies": "t41", "custom_class": "task"}, {"id": "t43", "name": "5.5 Tratamiento de datos faltantes e inconsistentes", "start": "2026-10-22", "end": "2026-10-28", "progress": 0, "dependencies": "t42", "custom_class": "task"}, {"id": "t44", "name": "5.6 Cálculo de indicadores preliminares", "start": "2026-10-29", "end": "2026-10-30", "progress": 0, "dependencies": "t43", "custom_class": "task"}, {"id": "t45", "name": "6 Trabajo de campo cualitativo", "start": "2026-09-07", "end": "2026-10-30", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t46", "name": "6.1 Identificación de perfiles a entrevistar", "start": "2026-09-07", "end": "2026-09-09", "progress": 0, "dependencies": "t25", "custom_class": "task"}, {"id": "t47", "name": "6.2 Selección de informantes clave", "start": "2026-09-10", "end": "2026-09-15", "progress": 0, "dependencies": "t46", "custom_class": "task"}, {"id": "t48", "name": "6.3 Solicitud de autorización y coordinación de entrevistas", "start": "2026-09-16", "end": "2026-09-22", "progress": 0, "dependencies": "t47", "custom_class": "task"}, {"id": "t49", "name": "6.4 Prueba piloto de la guía de entrevista", "start": "2026-09-23", "end": "2026-09-24", "progress": 0, "dependencies": "t48", "custom_class": "task"}, {"id": "t50", "name": "6.5 Ajuste de preguntas a partir de prueba piloto", "start": "2026-09-25", "end": "2026-09-28", "progress": 0, "dependencies": "t49", "custom_class": "task"}, {"id": "t51", "name": "6.6 Aplicación de entrevistas a operadores forenses", "start": "2026-09-29", "end": "2026-10-05", "progress": 0, "dependencies": "t50", "custom_class": "task"}, {"id": "t52", "name": "6.7 Aplicación de entrevistas a responsables de recepción o gestión", "start": "2026-10-06", "end": "2026-10-08", "progress": 0, "dependencies": "t50", "custom_class": "task"}, {"id": "t53", "name": "6.8 Aplicación de entrevistas a investigadores o usuarios del resultado pericial", "start": "2026-10-09", "end": "2026-10-14", "progress": 0, "dependencies": "t50", "custom_class": "task"}, {"id": "t54", "name": "6.9 Sistematización de respuestas obtenidas", "start": "2026-10-15", "end": "2026-10-21", "progress": 0, "dependencies": "t51,t52,t53", "custom_class": "task"}, {"id": "t55", "name": "6.10 Identificación de criterios expertos de priorización", "start": "2026-10-22", "end": "2026-10-28", "progress": 0, "dependencies": "t54", "custom_class": "task"}, {"id": "t56", "name": "6.11 Hito: criterios cualitativos sistematizados", "start": "2026-10-30", "end": "2026-10-30", "progress": 0, "dependencies": "t55", "custom_class": "milestone"}, {"id": "t57", "name": "7 Análisis descriptivo y exploratorio", "start": "2026-11-02", "end": "2026-11-13", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t58", "name": "7.1 Cálculo de volumen de dispositivos y registros", "start": "2026-11-02", "end": "2026-11-03", "progress": 0, "dependencies": "t44", "custom_class": "task"}, {"id": "t59", "name": "7.2 Cálculo de tiempos de ingreso, asignación, análisis e informe", "start": "2026-11-04", "end": "2026-11-05", "progress": 0, "dependencies": "t58", "custom_class": "task"}, {"id": "t60", "name": "7.3 Análisis de tipos de delitos asociados", "start": "2026-11-06", "end": "2026-11-09", "progress": 0, "dependencies": "t58", "custom_class": "task"}, {"id": "t61", "name": "7.4 Análisis de complejidad técnica por dispositivo/extracción", "start": "2026-11-10", "end": "2026-11-11", "progress": 0, "dependencies": "t59", "custom_class": "task"}, {"id": "t62", "name": "7.5 Análisis de resultados útiles/no útiles", "start": "2026-11-12", "end": "2026-11-13", "progress": 0, "dependencies": "t60,t61", "custom_class": "task"}, {"id": "t63", "name": "8 Minería de datos y modelos iniciales", "start": "2026-11-16", "end": "2026-11-27", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t64", "name": "8.1 Selección de variables predictoras", "start": "2026-11-16", "end": "2026-11-17", "progress": 0, "dependencies": "t62", "custom_class": "task"}, {"id": "t65", "name": "8.2 Definición de variable objetivo", "start": "2026-11-18", "end": "2026-11-19", "progress": 0, "dependencies": "t64", "custom_class": "task"}, {"id": "t66", "name": "8.3 Aplicación exploratoria de árboles de decisión", "start": "2026-11-20", "end": "2026-11-23", "progress": 0, "dependencies": "t65", "custom_class": "task"}, {"id": "t67", "name": "8.4 Aplicación exploratoria de random forest o modelo alternativo", "start": "2026-11-24", "end": "2026-11-25", "progress": 0, "dependencies": "t66", "custom_class": "task"}, {"id": "t68", "name": "8.5 Aplicación exploratoria de clustering", "start": "2026-11-26", "end": "2026-11-27", "progress": 0, "dependencies": "t64", "custom_class": "task"}, {"id": "t69", "name": "9 Diseño del modelo de priorización", "start": "2026-11-16", "end": "2026-12-08", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t70", "name": "9.1 Definición de criterios técnicos de priorización", "start": "2026-11-16", "end": "2026-11-17", "progress": 0, "dependencies": "t55", "custom_class": "task"}, {"id": "t71", "name": "9.2 Definición de criterios jurídicos e investigativos", "start": "2026-11-18", "end": "2026-11-19", "progress": 0, "dependencies": "t70", "custom_class": "task"}, {"id": "t72", "name": "9.3 Definición de criterios procedimentales y organizacionales", "start": "2026-11-20", "end": "2026-11-23", "progress": 0, "dependencies": "t71", "custom_class": "task"}, {"id": "t73", "name": "9.4 Asignación preliminar de ponderaciones", "start": "2026-11-24", "end": "2026-11-26", "progress": 0, "dependencies": "t72", "custom_class": "task"}, {"id": "t74", "name": "9.5 Construcción de matriz multicriterio", "start": "2026-11-27", "end": "2026-12-01", "progress": 0, "dependencies": "t73", "custom_class": "task"}, {"id": "t75", "name": "9.6 Cálculo de puntaje de prioridad", "start": "2026-12-02", "end": "2026-12-03", "progress": 0, "dependencies": "t74", "custom_class": "task"}, {"id": "t76", "name": "9.7 Clasificación de niveles de prioridad", "start": "2026-12-04", "end": "2026-12-07", "progress": 0, "dependencies": "t75", "custom_class": "task"}, {"id": "t77", "name": "9.8 Hito: modelo preliminar de priorización diseñado", "start": "2026-12-08", "end": "2026-12-08", "progress": 0, "dependencies": "t76", "custom_class": "milestone"}, {"id": "t78", "name": "10 Validación y retroalimentación del modelo", "start": "2026-12-09", "end": "2026-12-18", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t79", "name": "10.1 Selección de casos o registros anonimizados para validación", "start": "2026-12-09", "end": "2026-12-10", "progress": 0, "dependencies": "t77", "custom_class": "task"}, {"id": "t80", "name": "10.2 Comparación entre prioridad del modelo y criterio experto", "start": "2026-12-11", "end": "2026-12-15", "progress": 0, "dependencies": "t79", "custom_class": "task"}, {"id": "t81", "name": "10.3 Identificación de diferencias, sesgos o inconsistencias", "start": "2026-12-16", "end": "2026-12-17", "progress": 0, "dependencies": "t80", "custom_class": "task"}, {"id": "t82", "name": "10.4 Ajuste preliminar de criterios y ponderaciones", "start": "2026-12-18", "end": "2026-12-18", "progress": 0, "dependencies": "t81", "custom_class": "task"}, {"id": "t83", "name": "10.5 Hito: modelo ajustado preliminarmente", "start": "2026-12-18", "end": "2026-12-18", "progress": 0, "dependencies": "t82", "custom_class": "milestone"}, {"id": "t84", "name": "11 Redacción del TFG", "start": "2026-08-03", "end": "2026-12-23", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t85", "name": "11.1 Redacción de introducción y planteamiento del problema", "start": "2026-08-03", "end": "2026-08-07", "progress": 0, "dependencies": "t6", "custom_class": "task"}, {"id": "t86", "name": "11.2 Redacción de justificación y objetivos", "start": "2026-08-10", "end": "2026-08-13", "progress": 0, "dependencies": "t85", "custom_class": "task"}, {"id": "t87", "name": "11.3 Redacción del marco teórico", "start": "2026-08-31", "end": "2026-09-11", "progress": 0, "dependencies": "t15", "custom_class": "task"}, {"id": "t88", "name": "11.4 Redacción de metodología", "start": "2026-09-07", "end": "2026-09-15", "progress": 0, "dependencies": "t25", "custom_class": "task"}, {"id": "t89", "name": "11.5 Redacción del diagnóstico preliminar", "start": "2026-09-16", "end": "2026-09-21", "progress": 0, "dependencies": "t88", "custom_class": "task"}, {"id": "t90", "name": "11.6 Redacción del capítulo de construcción de base de datos", "start": "2026-10-19", "end": "2026-10-23", "progress": 0, "dependencies": "t37", "custom_class": "task"}, {"id": "t91", "name": "11.7 Redacción del capítulo de análisis descriptivo", "start": "2026-11-16", "end": "2026-11-20", "progress": 0, "dependencies": "t62", "custom_class": "task"}, {"id": "t92", "name": "11.8 Redacción del capítulo de modelo de priorización", "start": "2026-12-09", "end": "2026-12-15", "progress": 0, "dependencies": "t77", "custom_class": "task"}, {"id": "t93", "name": "11.9 Redacción de validación, límites y recomendaciones", "start": "2026-12-18", "end": "2026-12-23", "progress": 0, "dependencies": "t83", "custom_class": "task"}, {"id": "t94", "name": "12 Revisión formal y presentación", "start": "2026-12-21", "end": "2026-12-30", "progress": 0, "dependencies": "", "custom_class": "phase"}, {"id": "t95", "name": "12.1 Revisión integral de coherencia interna", "start": "2026-12-21", "end": "2026-12-23", "progress": 0, "dependencies": "t93", "custom_class": "task"}, {"id": "t96", "name": "12.2 Revisión de citas y bibliografía", "start": "2026-12-24", "end": "2026-12-25", "progress": 0, "dependencies": "t95", "custom_class": "task"}, {"id": "t97", "name": "12.3 Corrección de estilo, formato y tablas", "start": "2026-12-28", "end": "2026-12-29", "progress": 0, "dependencies": "t96", "custom_class": "task"}, {"id": "t98", "name": "12.4 Elaboración de versión avanzada para revisión del director", "start": "2026-12-30", "end": "2026-12-30", "progress": 0, "dependencies": "t97", "custom_class": "task"}, {"id": "t99", "name": "12.5 Hito: entrega de versión avanzada del TFG", "start": "2026-12-30", "end": "2026-12-30", "progress": 0, "dependencies": "t98", "custom_class": "milestone"}];
+
+const gantt = new Gantt("#gantt", tasks, {
+  view_mode: 'Week',
+  language: 'es',
+  custom_popup_html: function(task) {
+    return `<div class="popup-wrapper" style="padding:10px 14px;">
+      <div class="title">${task.name}</div>
+      <div class="subtitle">Inicio: ${task._start.toLocaleDateString('es-AR')}</div>
+      <div class="subtitle">Fin: ${task._end.toLocaleDateString('es-AR')}</div>
+    </div>`;
+  }
+});
+
+document.querySelectorAll('.controls button[data-mode]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.controls button[data-mode]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    gantt.change_view_mode(btn.dataset.mode);
+  });
+});
+</script>
+</body>
+</html>
